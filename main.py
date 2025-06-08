@@ -1,8 +1,9 @@
 import pygame as pg
 import numpy as np
 import render
+import sys
 
-NUM_MASSES = 3
+NUM_MASSES = int(sys.argv[1])
 WIDTH, HEIGHT = 1280, 720
 FRAMERATE = 60
 
@@ -17,7 +18,7 @@ scale = 200. # How many pixels are in one unit length
 X0 = np.linspace(0, 2 * np.pi, NUM_MASSES, endpoint=False)
 X = np.zeros_like(X0)
 dX0dt = np.array([1] + [0] * (NUM_MASSES - 1))  # Initial velocities, first and last masses have velocity 1, others are 0
-k = 1
+k = 1 + NUM_MASSES
 M = np.zeros((NUM_MASSES, NUM_MASSES), dtype=float)
 for i in range(NUM_MASSES):
     M[i, i] = 2.0
@@ -50,7 +51,7 @@ while running:
             y[i] = dydt[i] * t
         else:
             y[i] = 1 / np.sqrt(ev) / np.sqrt(k) * np.sin(np.sqrt(ev) * t)
-    X = eigenvectors @ np.array(y)
+    X = eigenvectors @ np.array(y) 
     # RENDER CODE
     render.render_circle(screen, scale)
     render.render_springs(screen, scale, X, X0)
